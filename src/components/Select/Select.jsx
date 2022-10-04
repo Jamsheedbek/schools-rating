@@ -11,16 +11,12 @@ export default function SelectLabels({
   selectValue,
   label = "Label",
 }) {
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState(options[0].value);
 
   const handleChange = (event) => {
     setValue(event.target.value);
     selectValue = value;
   };
-
-  React.useEffect(() => {
-    setValue(options[0].value);
-  }, []);
 
   return (
     <div>
