@@ -18,6 +18,10 @@ export default function SelectLabels({
     selectValue = value;
   };
 
+  React.useEffect(() => {
+    setValue(options[0].value);
+  }, []);
+
   return (
     <div>
       <FormControl sx={{ m: 1, minWidth: 120 }}>
@@ -26,12 +30,15 @@ export default function SelectLabels({
           labelId="demo-simple-select-helper-label"
           id="demo-simple-select-helper"
           value={value}
-          label="Age"
+          label={label}
           onChange={handleChange}
+          defaultValue={options[0].value}
         >
           {options &&
-            options.map((option) => (
-              <MenuItem value={option.value}>{option.name}</MenuItem>
+            options.map((option, i) => (
+              <MenuItem key={i} value={option.value}>
+                {option.name}
+              </MenuItem>
             ))}
         </Select>
         <FormHelperText>{about}</FormHelperText>

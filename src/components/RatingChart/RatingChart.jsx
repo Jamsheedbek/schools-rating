@@ -10,40 +10,106 @@ import { Paper } from "@mui/material";
 import Calendar from "../Calendar/Calendar";
 import SelectLabels from "../Select/Select";
 
+const Regions = [
+  "Andijon",
+  "Namangan",
+  "Farg'ona",
+  "Toshkent",
+  "Buxoro",
+  "Jizzax",
+  "Xorazm",
+  "Navoiy",
+  "Qashqadaryo",
+  "Samarqand",
+  "Qashqadaryo",
+  "Surhondaryo",
+];
+
+const medals = [
+  2336, 1440, 1680, 2022, 1998, 1879, 2012, 2164, 2046, 1978, 2412, 2564,
+];
+
 const RatingChart = () => {
-  var options = {
-    chart: {
-      height: 350,
-      type: "bar",
-      toolbar: {
-        show: false,
+  const renderChart = (series, categories) => {
+    const max = Math.max(...series);
+    const colors = [
+      function ({ value }) {
+        if (value === max) {
+          return "#57bb8a";
+        } else if (value > max * 0.95 && value <= max) {
+          return "#63b682";
+        } else if (value > max * 0.9 && value <= max * 0.95) {
+          return "73b87e";
+        } else if (value > max * 0.85 && value <= max * 0.9) {
+          return "#84bb7b";
+        } else if (value > max * 0.8 && value <= max * 0.85) {
+          return "#94bd77";
+        } else if (value > max * 0.75 && value <= max * 0.8) {
+          return "#a4c073";
+        } else if (value > max * 0.7 && value <= max * 0.75) {
+          return "#b0be6e";
+        } else if (value > max * 0.65 && value <= max * 0.7) {
+          return "#c4c56d";
+        } else if (value > max * 0.6 && value <= max * 0.65) {
+          return "#d4c86a";
+        } else if (value > max * 0.55 && value <= max * 0.6) {
+          return "#e2c965";
+        } else if (value > max * 0.5 && value <= max * 0.55) {
+          return "#f5ce62";
+        } else if (value > max * 0.45 && value <= max * 0.5) {
+          return "#f3c563";
+        } else if (value > max * 0.4 && value <= max * 0.45) {
+          return "#e9b861";
+        } else if (value > max * 0.35 && value <= max * 0.4) {
+          return "#e6ad61";
+        } else if (value > max * 0.3 && value <= max * 0.35) {
+          return "#ecac67";
+        } else if (value > max * 0.25 && value <= max * 0.3) {
+          return "#e9a268";
+        } else if (value > max * 0.2 && value <= max * 0.25) {
+          return "#e79a69";
+        } else if (value > max * 0.15 && value <= max * 0.2) {
+          return "#e5926b";
+        } else if (value > max * 0.1 && value <= max * 0.15) {
+          return "#e2886c";
+        } else if (value > max * 0.05 && value <= max * 0.1) {
+          return "#e0816d";
+        } else if (value <= max * 0.05) {
+          return "#dd776e";
+        }
       },
-    },
-    plotOptions: {
-      bar: {
-        horizontal: false,
+    ];
+    var options = {
+      chart: {
+        height: 350,
+        type: "bar",
+        toolbar: {
+          show: false,
+        },
       },
-    },
-    series: [
-      {
-        name: "PRODUCT A",
-        data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      colors,
+      plotOptions: {
+        bar: {
+          horizontal: false,
+        },
       },
-    ],
-    xaxis: {
-      type: "datetime",
-      categories: [
-        "01/01/2011 GMT",
-        "01/02/2011 GMT",
-        "01/03/2011 GMT",
-        "01/04/2011 GMT",
-        "01/05/2011 GMT",
-        "01/06/2011 GMT",
+      series: [
+        {
+          name: "PRODUCT A",
+          data: series.map((e) => e),
+        },
       ],
-    },
-    fill: {
-      opacity: 1,
-    },
+      xaxis: {
+        categories,
+      },
+      fill: {
+        opacity: 1,
+      },
+    };
+
+    var chart = new ApexCharts(document.querySelector("#chart"), options);
+    document.querySelector("#chart").innerHTML = "";
+    chart.render();
   };
 
   const [value, setValue] = React.useState("1");
@@ -54,9 +120,7 @@ const RatingChart = () => {
 
   React.useEffect(() => {
     if (document.querySelector("#chart")) {
-      var chart = new ApexCharts(document.querySelector("#chart"), options);
-      document.querySelector("#chart").innerHTML = "";
-      chart.render();
+      renderChart(medals, Regions);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
@@ -77,8 +141,39 @@ const RatingChart = () => {
               <Calendar />
             </Box>
             <Box style={{ display: "flex" }}>
-              <SelectLabels />
-              <SelectLabels />
+              <SelectLabels
+                label="Region"
+                about="Hududni tanlang"
+                options={[
+                  { name: "Viloyatlar boyicha", value: "region" },
+
+                  { name: "Tumanlar bo'yicha", value: "district" },
+
+                  { name: "Maktablar bo'yicha", value: "schools" },
+                ]}
+              />
+              <SelectLabels
+                label="Rating"
+                about="Reytingni tanlang"
+                options={[
+                  {
+                    name: "Jami medallar bo'yicha",
+                    value: "all_medals",
+                  },
+                  {
+                    name: "Oltin medallar bo'yicha",
+                    value: "gold_medals",
+                  },
+                  {
+                    name: "Kumush medallar bo'yicha",
+                    value: "silver_medals",
+                  },
+                  {
+                    name: "Bronza medallar bo'yicha",
+                    value: "bronze_medals",
+                  },
+                ]}
+              />
             </Box>
             <TabPanel value="1">
               <div id="chart"></div>
